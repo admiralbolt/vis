@@ -1,0 +1,7 @@
+[project]
+name = "vis"
+version = "0.0.1"
+dependencies = [
+  "math",
+  "python_version>=3.8"
+]
