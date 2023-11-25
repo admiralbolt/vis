@@ -49,7 +49,6 @@ def take_step(point: pygame.Vector2, step_data: dict) -> pygame.Vector2:
 
   return new_point
 
-
 def prime_spiral(screen: pygame.display):
   step_data = {
     "dist": 1,
@@ -68,7 +67,6 @@ def prime_spiral(screen: pygame.display):
     point = take_step(point, step_data)
   
   pygame.display.flip()
-
 
 
 if __name__ == "__main__":
