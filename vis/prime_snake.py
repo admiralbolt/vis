@@ -31,7 +31,7 @@ def is_prime(n, max_n=1_000_000):
 
   return sieve_state[n]
 
-def get_color(index, cycle_length=24000):
+def get_color(index, cycle_length=1_000_000):
   # RAINBOW
   step = (index // (cycle_length / 6)) % 6
   pos = index % (cycle_length / 6)
