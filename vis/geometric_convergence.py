@@ -1,7 +1,6 @@
 import argparse
 import math
 
-import numpy as np
 import pygame
 
 from vis.utils import drawing_utils
@@ -23,7 +22,6 @@ def cos_convergence(screen: pygame.display, ratio: float=0.95, depth: int=0, deg
   points = []
   val = 1
   for i in range(depth):
-    # points.append(pygame.Vector2(CENTER.x + val * scale, CENTER.y + next * scale))
     degree = i * degree_step * math.pi / 180
     points.append(pygame.Vector2(CENTER.x + math.cos(degree) * x_scale * val, CENTER.y - math.sin(degree) * y_scale * val))
     val *= ratio
