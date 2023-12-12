@@ -8,6 +8,7 @@ import numpy as np
 import pygame
 import pylab as pl
 from scipy.io import wavfile
+from scipy.fftpack import fft
 
 from vis.utils import drawing_utils
 
@@ -34,88 +35,30 @@ if __name__ == "__main__":
 
   sample_range = np.arange(0, audio_length, args.time_slice)
   total_samples = len(sample_range)
+  sample_size = int(sample_rate * args.time_slice)
 
-  bucket_size = 5
-  buckets = 16
+  for i in range(1, total_samples):
+    single_sample_data = audio_data[i * sample_size:(i + 1) * sample_size, 0]
+    N = len(single_sample_data)
+    T = 1.0 / sample_rate
+    y_freq = fft(single_sample_data)
 
-  # frequencies = []
-  # for i in sample_range:
-  #   # Convert the samples back into usuable indicies.
-  #   sample_start = int(i * sample_rate)
-  #   sample_end = int((i + args.slice_time) * sample_rate)
-  #   signal = audio_data[sample_start:sample_end]
-  #   # If we have two channels of data, average them.
-  #   if audio_data.shape[1] == 2:
-  #     signal = signal.sum(axis = 1) / 2
-  #   secs = (sample_end - sample_start) / sample_rate
-  #   t = np.arange(0, secs, sample_interval)
+    for i, freq in enumerate(y_freq):
+      print(i, abs(freq))
 
-  #   # The following section is copy pasted because I can't be bothered to 
-  #   # understand it at the current moment in time.
-  #   FFT = abs(np.fft(signal))
-  #   FFT_side = FFT[range(int((sample_end - sample_start)/2))] # one side FFT range
-  #   freqs = np.fftpack.fftfreq(signal.size, t[1]-t[0])
-  #   fft_freqs = np.array(freqs)
-  #   freqs_side = freqs[range(int((sample_end - sample_start)/2))] # one side frequency range
-  #   fft_freqs_side = np.array(freqs_side)
-
-  #   # Put things in buckets.
-  #   FFT_side = FFT_side[0:bucket_size*buckets]
-  #   fft_freqs_side = fft_freqs_side[0:bucket_size*buckets]
-  #   FFT_side = np.array([int(sum(FFT_side[current: current+bucket_size])) for current in range(0, len(FFT_side), bucket_size)])
-  #   fft_freqs_side = np.array([int(sum(fft_freqs_side[current: current+bucket_size])) for current in range(0, len(fft_freqs_side), bucket_size)])
-
-  #   # Normalize from 0-1... I guess?
-  #   max_value = max(FFT_side)
-  #   if (max_value != 0):
-  #     FFT_side_norm = FFT_side / max_value
-
-  #   frequencies.append(FFT_side_norm)
-
-  #   pl.plot(t, FFT_side_norm)
-  #   pl.xlabel("Frequency(Hz)")
-
-  # p = 20 * np.log10(np.abs(np.fft.rfft(audio_data[:2048, 0])))
-  # f = np.linspace(0, sample_rate/2.0, len(p))
-  # pl.plot(f, p)
-  # pl.xlabel("Frequency(Hz)")
-  # pl.ylabel("Power(dB)")
-  # pl.show()
-  signal = np.mean(audio_data[:int(args.time_slice * sample_rate)], axis=1)
-  # ft = np.fft.fft(signal)
-  # freq = np.fft.fftfreq(len(ft), d=args.time_slice)
-
-  # plt.subplot(211)
-  # plt.plot(freq, ft.real, label="Real part")
-  # plt.xlim(-50,50)
-  # plt.ylim(-600,600)
-  # plt.legend(loc=1)
-  # plt.title("FFT in Frequency Domain")
-
-  # plt.subplot(212)
-  # plt.plot(freq, ft.imag,label="Imaginary part")
-  # plt.legend(loc=1)
-  # plt.xlim(-50,50)
-  # plt.ylim(-600,600)
-  # plt.xlabel("frequency (Hz)")
-  # plt.show()
-
-  # print(freq)
-
-
-  for i in sample_range:
-    # Convert the samples back into usuable indicies.
-    sample_start = int(i * sample_rate)
-    sample_end = int((i + args.time_slice) * sample_rate)
-    print(f"{sample_start=}, {sample_end=}, Total Length: {sample_end - sample_start}, About the same as: {args.time_slice * sample_rate}")
-    signal = np.mean(audio_data[sample_start:sample_end], axis=1)
-
-    p = 20 * np.log10(np.abs(np.fft.rfft(signal)))
-    f = np.linspace(0, sample_rate/2.0, len(p))
-    pl.plot(f, p)
-    pl.xlabel("Frequency(Hz)")
-    pl.ylabel("Power(dB)")
-    pl.show()
+    domain = len(y_freq) // 2
+    print(f"{domain=}")
+    print(f"sample_rate / 2 = {sample_rate // 2}")
+    print(f"N /2 = {N // 2}")
+    print(y_freq)
+    print(abs(y_freq[:domain]))
+    # x_freq = np.linspace(0, sample_rate // 2, N // 2)
+    x_freq = np.linspace(0, 1000, N // 2)
+    print(x_freq)
+    plt.plot(x_freq, 20 * np.log10(np.abs(y_freq[:domain])), lw=0.15)
+    plt.xlabel("Frequency [Hz]")
+    plt.ylabel("Frequency Amplitude")
+    plt.show()
 
 
 
