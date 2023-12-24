@@ -46,9 +46,19 @@ def get_chain(c: dict[int, int], start: int) -> list[int]:
   chain.append(1)
   return chain
 
+def draw_arrow(screen: pygame.display, start: tuple[float, float], end: tuple[float, float], color=(140, 140, 140)):
+  pygame.draw.line(screen, color=color, start_pos=start, end_pos=end, width=1)
+  points = []
+  for degree in [90, 210, 330]:
+    points.append(pygame.Vector2(
+      end[0] + 5 * math.cos(degree * math.pi / 180),
+      end[1] + 5 * math.sin(degree * math.pi / 180)
+    ))
+  pygame.draw.polygon(screen, color, points, width=0)
+
 def draw_text_in_circle(screen: pygame.display, text: str, position: tuple[float, float], radius: float, circle_color=(60, 80, 100), font_color=(170, 170, 190)):
   pygame.draw.circle(screen, circle_color, position, radius)
-  text_size = 30 - 5 * len(text)
+  text_size = max(30 - 5 * len(text), 10)
   font = pygame.freetype.SysFont("helvetica", text_size, bold=True)
   text_rect = font.get_rect(text, size=text_size)
   text_rect.center = position
@@ -70,15 +80,45 @@ if __name__ == "__main__":
   screen.fill("black")
 
   FT_FONT = pygame.freetype.SysFont("helvetica", TEXT_SIZE, bold=True)
-  # Draw the 1!
-  draw_text_in_circle(screen, "1", (args.width / 2, args.height - 30), 20)
+  circle_radius = 15
+  draw_text_in_circle(screen, "1", (args.width - 30, args.height - 30), circle_radius)
 
-  # Start by going through chains by length.
-  for i in range(2, 14):
-    y = args.height - 30 - 50 * (i - 1)
+  starting_shift = 400
+
+  
+  # x, y, angle
+  prev_nodes = {}
+  prev_nodes[1] = (args.width - 30, args.height - 30, 90)
+  circle_radius = 20
+  for i in range(2, 19):
     for j, chain in enumerate(chains_by_length[i][::-1]):
-      x = args.width / 2 + 50 * j
-      draw_text_in_circle(screen, str(chain[0]), (x, y), 20)
+      new_number = chain[0]
+      prev_node = prev_nodes[chain[1]]
+      x = prev_node[0]
+      if new_number %2 == 1:
+        x -= (400 - 50 * int(i / 3))
+      y = prev_node[1] - 50
+      prev_nodes[new_number] = (x, y, 90)
+      draw_arrow(screen, (x, y), (prev_node[0], prev_node[1]))
+      draw_text_in_circle(screen, str(new_number), (x, y), circle_radius)
+
+      
+
+
+
+  # x_locations = {}
+
+  # # Start by going through chains by length.
+  # for i in range(2, 16):
+  #   y = args.height - 30 - 50 * (i - 1)
+  #   for j, chain in enumerate(chains_by_length[i][::-1]):
+  #     x = args.width / 2 + 50 * int((j + 1) / 2) * (-1) ** j
+  #     x_locations[chain[0]] = x
+  #     draw_text_in_circle(screen, str(chain[0]), (x, y), circle_radius)
+  #     if i <= 2:
+  #       continue
+
+  #     draw_arrow(screen, (x, y + circle_radius), (x_locations[chain[1]], y + circle_radius + 7))
 
 
 
