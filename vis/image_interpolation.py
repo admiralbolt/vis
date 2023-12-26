@@ -10,19 +10,19 @@ parser.add_argument("--end", help="Ending image")
 parser.add_argument("--output", help="Path to output file.")
 parser.add_argument("--step", type=float, default=0.05, help="Step size between images.")
 parser.add_argument("--bpm", type=float, help="Beats per minute!")
+parser.add_argument("--mult", default=4, type=float, help="Multiplier. Default is one image shift per beat. Multiplier of 4 means image shift per 4 beats.")
 
 FPS = 60
 
-def interpolate_diff(start_image_path: str="", end_image_path: str="", output: str="", step: float=0.05, bpm: float=140):
+def interpolate_diff(start_image_path: str="", end_image_path: str="", output: str="", step: float=0.05, mult: float=4, bpm: float=140):
   start = cv2.imread(start_image_path)
   end = cv2.imread(end_image_path)
 
   # Need to convert beats per minute => seconds for each image.
   bps = bpm / 60.0
-  time_per_image = (1.0 / bps) * 4
+  time_per_image = (1.0 / bps) * mult
   frames_per_image = int(time_per_image * FPS)
   print(frames_per_image)
-
 
   # Resize the end image to match the start.
   end = cv2.resize(end, (start.shape[1], start.shape[0]))
@@ -31,7 +31,6 @@ def interpolate_diff(start_image_path: str="", end_image_path: str="", output: s
   writer = cv2.VideoWriter(output, fourcc, FPS, (start.shape[1], start.shape[0]))
 
   for mix in np.arange(0, 1 + step, step):
-    print(mix)
     im = cv2.addWeighted(start, mix, end, 1 - mix, 0)
     for _ in range(frames_per_image):
       writer.write(im)
@@ -52,9 +51,4 @@ if __name__ == "__main__":
     print("--start and --end must be real files.")
     quit()
 
-  interpolate_diff(start_image_path=args.start, end_image_path=args.end, output=args.output, step=args.step, bpm=args.bpm)
-  
-
-  
-
-  
+  interpolate_diff(start_image_path=args.start, end_image_path=args.end, output=args.output, step=args.step, mult=args.mult, bpm=args.bpm)
