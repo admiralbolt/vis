@@ -21,6 +21,7 @@ def interpolate_diff(start_image_path: str="", end_image_path: str="", output: s
   # Need to convert beats per minute => seconds for each image.
   bps = bpm / 60.0
   time_per_image = (1.0 / bps) * mult
+  print(time_per_image * FPS)
   frames_per_image = int(time_per_image * FPS)
   print(frames_per_image)
 
@@ -31,7 +32,7 @@ def interpolate_diff(start_image_path: str="", end_image_path: str="", output: s
   writer = cv2.VideoWriter(output, fourcc, FPS, (start.shape[1], start.shape[0]))
 
   for mix in np.arange(0, 1 + step, step):
-    im = cv2.addWeighted(start, mix, end, 1 - mix, 0)
+    im = cv2.addWeighted(start, 1 - mix, end, mix, 0)
     for _ in range(frames_per_image):
       writer.write(im)
 
