@@ -10,7 +10,7 @@ parser.add_argument("--end", help="Ending image")
 parser.add_argument("--output", help="Path to output file.")
 parser.add_argument("--step", type=float, default=0.05, help="Step size between images.")
 parser.add_argument("--bpm", type=float, help="Beats per minute!")
-parser.add_argument("--mult", default=4, type=float, help="Multiplier. Default is one image shift per beat. Multiplier of 4 means image shift per 4 beats.")
+parser.add_argument("--mult", default=4, type=float, help="Multiplier. Default is one image shift per beat. Multiplier of 4 means one image shift every 4 beats.")
 
 FPS = 60
 
