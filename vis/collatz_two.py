@@ -71,28 +71,13 @@ for key, val in next_branch.items():
 # for i in range(3, 1000, 2):
 #   print(f"{i} -> {next_branch[i][0]}")
 
-
-def a(val):
-  j = 128
-  result = (6 * val + 2) / j
-  while not result.is_integer() and j > 1:
-    j /= 2
-    result = (6 * val + 2) / j
-
-  return (result, j)
-
-for i in range(3, 51, 2):
-  val, mod = a(i)
-  print(f"###### {i} ({mod}) ####")
-  for j in range(1, i + 2, 2):
-    res = (6 * j + 2) / mod
-    if res.is_integer():
-      print(j, res)
+for q in range(201, 231, 2):
+  print([int(z) for z in get_chain(c, q) if z % 2 == 1])
 
 # start = 283
 # while start != 2:
 #   print(start)
 #   start = leaves_to_branches[c[start]]
 
-pyplot.scatter(x, y, s=3)
-pyplot.show()
+# pyplot.scatter(x, y, s=3)
+# pyplot.show()
