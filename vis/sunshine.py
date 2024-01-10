@@ -12,7 +12,7 @@ SUN_INNER_RADIUS = 100
 SUN_INNER_COLOR = (255, 200, 0)
 SUN_ROTATION_SCALING = 20
 SUN_RAY_SCALING = 1.5
-SUN_RAY_BASE_SPEED = 12
+SUN_RAY_BASE_SPEED = 8
 
 class Ray:
 
@@ -24,7 +24,7 @@ class Ray:
   position: tuple[float, float]
 
   def __init__(self):
-    self.length = random.randint(50, 60) + random.random() 
+    self.length = random.randint(75, 85) + random.random() 
     self.width = 1 + random.random()
     self.color = (random.randint(230, 255), random.randint(200, 240), 0)
     self.speed = SUN_RAY_BASE_SPEED + random.randint(3, 7) + random.random()
@@ -97,6 +97,34 @@ def render_sun(screen: pygame.display, offset: int) -> None:
 
   pygame.draw.circle(screen, (250, 195, 0), CENTER, SUN_INNER_RADIUS, width=3)
 
+
+SKY_COLORS = [
+  (80, 180, 255),
+  (0, 0, 50),
+  (20, 40, 255)
+]
+
+STEP_SIZE = 500
+TOTAL_STEPS = STEP_SIZE * len(SKY_COLORS)
+
+def get_background_color(offset: int) -> tuple[int, int, int]:
+  mod_offset = offset % TOTAL_STEPS
+  chunk_pos = mod_offset // STEP_SIZE
+  chunk_offset = mod_offset % STEP_SIZE
+  # Hey, it's our old friend linear interpolation back again, woweeee.
+  scaling_factor = (chunk_offset + 1) / STEP_SIZE
+
+  start_color = SKY_COLORS[chunk_pos]
+  end_color = SKY_COLORS[(chunk_pos + 1) % len(SKY_COLORS)]
+
+  color = (
+    (end_color[0] - start_color[0]) * scaling_factor + start_color[0],
+    (end_color[1] - start_color[1]) * scaling_factor + start_color[1],
+    (end_color[2] - start_color[2]) * scaling_factor + start_color[2]
+  )
+  
+  return color
+
 if __name__ == "__main__":
   args = parser.parse_args()
   screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -112,7 +140,7 @@ if __name__ == "__main__":
         pygame.quit()
         raise SystemExit
 
-    screen.fill("black")
+    screen.fill(get_background_color(offset=offset))
 
     for i, ray in enumerate(rays):
       if ray.in_bounds():
