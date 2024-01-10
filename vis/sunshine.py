@@ -14,6 +14,15 @@ SUN_ROTATION_SCALING = 20
 SUN_RAY_SCALING = 1.5
 SUN_RAY_BASE_SPEED = 8
 
+SKY_COLORS = [
+  (80, 180, 255),
+  (0, 0, 50),
+  (20, 40, 255)
+]
+
+STEP_SIZE = 500
+TOTAL_STEPS = STEP_SIZE * len(SKY_COLORS)
+
 class Ray:
 
   length: float
@@ -97,15 +106,6 @@ def render_sun(screen: pygame.display, offset: int) -> None:
 
   pygame.draw.circle(screen, (250, 195, 0), CENTER, SUN_INNER_RADIUS, width=3)
 
-
-SKY_COLORS = [
-  (80, 180, 255),
-  (0, 0, 50),
-  (20, 40, 255)
-]
-
-STEP_SIZE = 500
-TOTAL_STEPS = STEP_SIZE * len(SKY_COLORS)
 
 def get_background_color(offset: int) -> tuple[int, int, int]:
   mod_offset = offset % TOTAL_STEPS
