@@ -1,0 +1,15 @@
+#!/Users/admiralbolt/miniconda3/envs/yuh/bin/python
+
+import argparse
+
+from vis.lib import image_utils, video_utils
+
+parser = argparse.ArgumentParser(description="Convert video to rainbow edges.")
+parser.add_argument("--input", help="Path to input video. Should be mp4.")
+parser.add_argument("--output", help="Path to output video. Should be mp4.")
+args = parser.parse_args()
+
+def frame_callback(frame):
+  return image_utils.get_canny_edges(frame)
+
+video_utils.frame_by_frame_process(args.input, args.output, frame_callback)

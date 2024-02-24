@@ -1,0 +1,15 @@
+[project]
+name = "vis"
+authors = [
+  {name = "Avi Knecht", email="aviknecht@gmail.com"},
+]
+requires-python = ">=3.8"
+version = "0.0.1"
+
+[tool.setuptools]
+packages = ["vis.lib"]
+script-files = ["vis/bin/vis.rainbow_edge"]
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
