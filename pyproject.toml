@@ -8,7 +8,7 @@ version = "0.0.1"
 
 [tool.setuptools]
 packages = ["vis.lib"]
-script-files = ["vis/bin/vis.rainbow_edge"]
+script-files = ["vis/bin/vis.rainbow_edge", "vis/bin/vis.image_filter"]
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
