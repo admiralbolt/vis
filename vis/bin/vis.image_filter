@@ -6,19 +6,20 @@ import cProfile
 
 from vis.lib import image_utils
 
-parser = argparse.ArgumentParser(description="Image filtering swiss army knife.")
-parser.add_argument("--input", help="Path to input image.", required=True)
-parser.add_argument("--output", help="Path to output image.", required=True)
-parser.add_argument("--filter", help="Which filter to apply.", choices=image_utils.FILTERS, required=True)
-args = parser.parse_args()
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description="Image filtering swiss army knife.")
+  parser.add_argument("--input", help="Path to input image.", required=True)
+  parser.add_argument("--output", help="Path to output image.", required=True)
+  parser.add_argument("--filter", help="Which filter to apply.", choices=image_utils.FILTERS, required=True)
+  args = parser.parse_args()
 
-input_image = cv2.imread(args.input)
-height, width, channels = input_image.shape
-output_image = None
+  input_image = cv2.imread(args.input)
+  height, width, channels = input_image.shape
+  output_image = None
 
-if args.filter == "stained_glass":
-  dt = image_utils.get_delaunay_triangulation(width=width, height=height)
-  output_image = image_utils.stained_glass(input_image, dt)
+  if args.filter == "stained_glass":
+    dt = image_utils.get_delaunay_triangulation(width=width, height=height)
+    output_image = image_utils.stained_glass(input_image, dt)
 
 
-cv2.imwrite(args.output, output_image)
+  cv2.imwrite(args.output, output_image)

@@ -34,8 +34,9 @@ class DelaunauyTriangulation:
     self.masks = masks
 
 
-def get_delaunay_triangulation(width: int, height: int, triangle_size: int=200) -> DelaunauyTriangulation:
+def get_delaunay_triangulation(width: int, height: int, triangle_size: int=75, seed: int = 0) -> DelaunauyTriangulation:
   """Get Delaunay triangulation of a grid."""
+  random.seed(seed)
   triangle_size = 50
   vertical_slices = int(height / triangle_size)
   horizontal_slices = int(width / triangle_size)
@@ -74,3 +75,6 @@ def stained_glass(image: np.array, dt: DelaunauyTriangulation) -> np.array:
     cv2.polylines(final, [dt.vertices[simplice]], True, (0, 0, 0), 2)
 
   return final
+
+if __name__ == "__main__":
+  pass

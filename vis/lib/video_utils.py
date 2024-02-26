@@ -1,6 +1,7 @@
 import cv2
-import time
 
+from functools import partial
+from multiprocessing import Manager, Pool
 from progress.bar import Bar
 
 def frame_by_frame_process(input_video, output_video, frame_callback, debug=False):
@@ -16,16 +17,20 @@ def frame_by_frame_process(input_video, output_video, frame_callback, debug=Fals
   fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")
   writer = cv2.VideoWriter(output_video, fourcc, fps, (int(width), int(height)))
 
-  with Bar("Processing", max=total_frames) as bar:
+  all_frames = []
+  ret, frame = cap.read()
+  while ret:
+    all_frames.append(frame)
     ret, frame = cap.read()
-    while ret:
-      loop_start = time.time()
-      writer.write(frame_callback(frame))
-
-      bar.next()
-      ret, frame = cap.read()
-      if debug:
-        print(f"Loop took {time.time() - loop_start}s")
-
   cap.release()
+
+  with Pool(processes=16) as pool:
+    with Bar("Processing", max=total_frames) as bar:
+      for frame in pool.imap(frame_callback, all_frames):
+        writer.write(frame)
+        bar.next()
+
   writer.release()
+
+if __name__ == "__main__":
+  pass

@@ -13,3 +13,6 @@ def get_rainbow(val, max_val=1_000_000):
     4: (color_shift, 0, 255),
     5: (255, 0, 255 - color_shift)
   }[step]
+
+if __name__ == "__main__":
+  pass
