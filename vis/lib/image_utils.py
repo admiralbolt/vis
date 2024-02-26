@@ -3,6 +3,10 @@ import numpy as np
 import random
 from scipy.spatial import Delaunay
 
+FILTERS = [
+  "rainbow_edge",
+  "stained_glass"
+]
 
 def get_canny_edges(image: np.array, lower_threshold: int=50, upper_threshold: int=100, r=None, g=None, b=None) -> np.array:
   """Get rainbow colored edges from canny edge detection."""
@@ -18,7 +22,19 @@ def get_canny_edges(image: np.array, lower_threshold: int=50, upper_threshold: i
     cv2.drawContours(drawing, contours, i, (cr, cg, cb), 2, cv2.LINE_8, hierarchy, 0)
   return drawing
 
-def get_delaunay_triangulation(width: int, height: int, triangle_size: int=50) -> tuple[np.array, Delaunay]:
+class DelaunauyTriangulation:
+
+  vertices: np.array
+  tri: Delaunay
+  masks: list[np.array]
+
+  def __init__(self, vertices: np.array, tri: Delaunay, masks: list[np.array]):
+    self.vertices = vertices
+    self.tri = tri
+    self.masks = masks
+
+
+def get_delaunay_triangulation(width: int, height: int, triangle_size: int=200) -> DelaunauyTriangulation:
   """Get Delaunay triangulation of a grid."""
   triangle_size = 50
   vertical_slices = int(height / triangle_size)
@@ -39,18 +55,22 @@ def get_delaunay_triangulation(width: int, height: int, triangle_size: int=50) -
       vertices = np.append(vertices, [[x, y]], axis=0)
 
   tri = Delaunay(vertices)
-  return vertices, tri
+  masks = []
+  for simplice in tri.simplices:
+    mask = np.zeros((height, width), dtype=np.uint8)
+    cv2.fillPoly(mask, [vertices[simplice]], color=255)
+    masks.append(mask)
 
-def stained_glass(image: np.array, d_vertices: np.array, d_tri: Delaunay) -> np.array:
+  return DelaunauyTriangulation(vertices=vertices, tri=tri, masks=masks)
+
+def stained_glass(image: np.array, dt: DelaunauyTriangulation) -> np.array:
   """Apply stained glass effect based on Delaunay triangulation."""
   height, width, _ = image.shape
   final = np.zeros((height, width, 3), dtype=np.uint8)
 
-  for simplice in d_tri.simplices:
-    mask = np.zeros((height, width), dtype=np.uint8)
-    cv2.fillPoly(mask, [d_vertices[simplice]], color=255)
+  for simplice, mask in zip(dt.tri.simplices, dt.masks):
     mean_color = cv2.mean(image, mask=mask)
-    cv2.fillPoly(final, [d_vertices[simplice]], color=mean_color)
-    cv2.polylines(final, [d_vertices[simplice]], True, (0, 0, 0), 2)
+    cv2.fillPoly(final, [dt.vertices[simplice]], color=mean_color)
+    cv2.polylines(final, [dt.vertices[simplice]], True, (0, 0, 0), 2)
 
   return final

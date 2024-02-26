@@ -1,0 +1,32 @@
+#!/Users/admiralbolt/miniconda3/envs/yuh/bin/python
+
+import argparse
+
+from vis.lib import image_utils, video_utils
+
+parser = argparse.ArgumentParser(description="Video filtering swiss army knife.")
+parser.add_argument("--input", help="Path to input image.", required=True)
+parser.add_argument("--output", help="Path to output image.", required=True)
+parser.add_argument("--filter", help="Which filter to apply.", choices=image_utils.FILTERS, required=True)
+parser.add_argument("--debug", default=False, action="store_true", help="Print more info!")
+args = parser.parse_args()
+
+class GlobalState:
+
+  dt = None
+
+def rainbow_edge_callback(frame):
+  return image_utils.get_canny_edges(frame)
+
+def stained_glass_callback(frame):
+  if GlobalState.dt is None:
+    height, width, channels = frame.shape
+    GlobalState.dt = image_utils.get_delaunay_triangulation(width, height)
+  return image_utils.stained_glass(frame, GlobalState.dt)
+
+callbacks = {
+  "rainbow_edge": rainbow_edge_callback,
+  "stained_glass": stained_glass_callback
+}
+
+video_utils.frame_by_frame_process(args.input, args.output, callbacks[args.filter], debug=args.debug)
