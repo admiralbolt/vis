@@ -1,7 +1,6 @@
 import cv2
 
-from functools import partial
-from multiprocessing import Manager, Pool
+from multiprocessing import Pool
 from progress.bar import Bar
 
 def frame_by_frame_process(input_video, output_video, frame_callback, debug=False):

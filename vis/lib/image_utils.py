@@ -34,10 +34,10 @@ class DelaunauyTriangulation:
     self.masks = masks
 
 
-def get_delaunay_triangulation(width: int, height: int, triangle_size: int=75, seed: int = 0) -> DelaunauyTriangulation:
+def get_delaunay_triangulation(width: int, height: int, triangle_size: int=25, seed: int = 0) -> DelaunauyTriangulation:
   """Get Delaunay triangulation of a grid."""
-  random.seed(seed)
-  triangle_size = 50
+  if seed:
+    random.seed(seed)
   vertical_slices = int(height / triangle_size)
   horizontal_slices = int(width / triangle_size)
   rng_height_bound = int(height / (vertical_slices * 3)) + 1

@@ -2,7 +2,6 @@
 
 import argparse
 import cv2
-import cProfile
 
 from vis.lib import image_utils
 
