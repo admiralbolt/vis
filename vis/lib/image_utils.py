@@ -3,10 +3,6 @@ import numpy as np
 import random
 from scipy.spatial import Delaunay
 
-FILTERS = [
-  "rainbow_edge",
-  "stained_glass"
-]
 
 def get_canny_edges(image: np.array, lower_threshold: int=50, upper_threshold: int=100, r=None, g=None, b=None) -> np.array:
   """Get rainbow colored edges from canny edge detection."""
@@ -64,9 +60,10 @@ def get_delaunay_triangulation(width: int, height: int, triangle_size: int=25, s
 
   return DelaunauyTriangulation(vertices=vertices, tri=tri, masks=masks)
 
-def stained_glass(image: np.array, dt: DelaunauyTriangulation) -> np.array:
+def stained_glass(image: np.array, triangle_size: int=25, seed: int=5) -> np.array:
   """Apply stained glass effect based on Delaunay triangulation."""
   height, width, _ = image.shape
+  dt = get_delaunay_triangulation(width, height, triangle_size=triangle_size, seed=seed)
   final = np.zeros((height, width, 3), dtype=np.uint8)
 
   for simplice, mask in zip(dt.tri.simplices, dt.masks):
