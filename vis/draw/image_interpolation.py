@@ -1,6 +1,5 @@
 import argparse
 import cv2
-import math
 import numpy as np
 
 parser = argparse.ArgumentParser(description="Interpolate the diff between two images.")

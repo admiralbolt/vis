@@ -3,7 +3,7 @@ import math
 
 import pygame
 
-from vis.utils import drawing_utils
+from vis.lib import drawing_utils
 
 parser = argparse.ArgumentParser(description="Cosine**n convergence")
 parser.add_argument("--depth", type=int, help="Number of iterations", default=140)
