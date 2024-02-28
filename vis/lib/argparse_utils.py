@@ -6,6 +6,14 @@ from vis.lib import image_utils
 
 def add_subparsers(parser: argparse.ArgumentParser):
   filter_parser = parser.add_subparsers(title="filter", dest="filter")
+
+  color_pop_parser = filter_parser.add_parser("color_pop", conflict_handler="resolve")
+  color_pop_parser.add_argument("--lower_b", type=int, default=0, help="Lower threshold for blue channel.")
+  color_pop_parser.add_argument("--lower_g", type=int, default=0, help="Lower threshold for green channel.")
+  color_pop_parser.add_argument("--lower_r", type=int, default=0, help="Lower threshold for red channel.")
+  color_pop_parser.add_argument("--upper_b", type=int, default=125, help="Upper threshold for blue channel.")
+  color_pop_parser.add_argument("--upper_g", type=int, default=125, help="Upper threshold for green channel.")
+  color_pop_parser.add_argument("--upper_r", type=int, default=125, help="Upper threshold for red channel.")
   
   rainbow_edge_parser = filter_parser.add_parser("rainbow_edge", conflict_handler="resolve")
   rainbow_edge_parser.add_argument("--lower_threshold", type=int, default=50, help="Lower threshold for canny edges.")
@@ -17,6 +25,13 @@ def add_subparsers(parser: argparse.ArgumentParser):
 
 def call_with_args(args: dict):
   return {
+    "color_pop": partial(image_utils.color_pop,
+                         lower_b=args.get("lower_b"),
+                         lower_g=args.get("lower_g"),
+                         lower_r=args.get("lower_r"),
+                         upper_b=args.get("upper_b"),
+                         upper_g=args.get("upper_g"),
+                         upper_r=args.get("upper_r")),
     "rainbow_edge": partial(image_utils.get_canny_edges,
                             lower_threshold=args.get("lower_threshold"),
                             upper_threshold=args.get("upper_threshold")),
@@ -26,6 +41,7 @@ def call_with_args(args: dict):
   }[args["filter"]]
 
 FILTERS = {
+  "color_pop": image_utils.color_pop,
   "rainbow_edge": image_utils.get_canny_edges,
   "stained_glass": image_utils.stained_glass
 }

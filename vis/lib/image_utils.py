@@ -4,6 +4,16 @@ import random
 from scipy.spatial import Delaunay
 
 
+def color_pop(image: np.array, lower_b: int=0, lower_g: int=0, lower_r: int=0, upper_b: int=0, upper_g: int=0, upper_r: int=0):
+  """Color pop effect! Only keep color in specified range, else grayscale."""
+  gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+  
+  mask = cv2.inRange(image, np.array([lower_b, lower_g, lower_r]), np.array([upper_b, upper_g, upper_r]))
+  res = cv2.bitwise_and(image, image, mask=mask)
+  background = cv2.bitwise_and(gray, gray, mask=np.bitwise_not(mask))
+  background = cv2.cvtColor(background, cv2.COLOR_GRAY2BGR)
+  return cv2.add(res, background)
+
 def get_canny_edges(image: np.array, lower_threshold: int=50, upper_threshold: int=100, r=None, g=None, b=None) -> np.array:
   """Get rainbow colored edges from canny edge detection."""
   gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
