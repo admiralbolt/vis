@@ -8,8 +8,9 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Video filtering swiss army knife.")
   parser.add_argument("--input", help="Path to input video.", required=True)
   parser.add_argument("--output", help="Path to output video (should be mp4).", required=True)
+  parser.add_argument("--multi_threaded", help="Use multiple threads. For very slow image operations, this is a performance improvement.", default=False, action="store_true")
   parser.add_argument("--debug", default=False, action="store_true", help="Print more info!")
   argparse_utils.add_subparsers(parser)
   args = parser.parse_args()
 
-  video_utils.frame_by_frame_process(args.input, args.output, frame_callback=argparse_utils.call_with_args(vars(args)), debug=args.debug)
+  video_utils.frame_by_frame_process(args.input, args.output, frame_callback=argparse_utils.call_with_args(vars(args)), multi_threaded=args.multi_threaded, debug=args.debug)
