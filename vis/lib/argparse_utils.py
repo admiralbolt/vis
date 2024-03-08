@@ -14,6 +14,11 @@ def add_subparsers(parser: argparse.ArgumentParser):
   color_pop_parser.add_argument("--upper_b", type=int, default=125, help="Upper threshold for blue channel.")
   color_pop_parser.add_argument("--upper_g", type=int, default=125, help="Upper threshold for green channel.")
   color_pop_parser.add_argument("--upper_r", type=int, default=125, help="Upper threshold for red channel.")
+
+  kmeans_parser = filter_parser.add_parser("kmeans", conflict_handler="resolve")
+  kmeans_parser.add_argument("--k", type=int, default=10, help="Number of colors to keep in final image.")
+  kmeans_parser.add_argument("--max_iter", type=int, default=50, help="Max iterations to use for quantization algorithm.")
+  kmeans_parser.add_argument("--epsilon", type=float, default=0.1, help="Epsilon to use for quantization algorithm.")
   
   rainbow_edge_parser = filter_parser.add_parser("rainbow_edge", conflict_handler="resolve")
   rainbow_edge_parser.add_argument("--lower_threshold", type=int, default=50, help="Lower threshold for canny edges.")
@@ -32,6 +37,10 @@ def call_with_args(args: dict):
                          upper_b=args.get("upper_b"),
                          upper_g=args.get("upper_g"),
                          upper_r=args.get("upper_r")),
+    "kmeans": partial(image_utils.kmeans,
+                      k=args.get("k"),
+                      max_iter=args.get("max_iter"),
+                      epsilon=args.get("epsilon")),
     "rainbow_edge": partial(image_utils.get_canny_edges,
                             lower_threshold=args.get("lower_threshold"),
                             upper_threshold=args.get("upper_threshold")),
@@ -42,6 +51,7 @@ def call_with_args(args: dict):
 
 FILTERS = {
   "color_pop": image_utils.color_pop,
+  "kmeans": image_utils.kmeans,
   "rainbow_edge": image_utils.get_canny_edges,
   "stained_glass": image_utils.stained_glass
 }

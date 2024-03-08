@@ -70,6 +70,20 @@ def get_delaunay_triangulation(width: int, height: int, triangle_size: int=25, s
 
   return DelaunauyTriangulation(vertices=vertices, tri=tri, masks=masks)
 
+def kmeans(image: np.array, k: int=10, max_iter: int=50, epsilon: float=0.1):
+  """Kmeans color quantization."""
+  pixel_vals = image.reshape((-1, 3))
+  pixel_vals = np.float32(pixel_vals)
+
+  criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, max_iter, epsilon)
+  _, labels, centers = cv2.kmeans(pixel_vals, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+
+  centers = np.uint8(centers)
+  segmented_data = centers[labels.flatten()]
+
+  segmented_image = segmented_data.reshape((image.shape))
+  return segmented_image
+
 def stained_glass(image: np.array, triangle_size: int=25, seed: int=5) -> np.array:
   """Apply stained glass effect based on Delaunay triangulation."""
   height, width, _ = image.shape
