@@ -1,6 +1,7 @@
-import cv2
 import multiprocessing
 
+import cv2
+import numpy as np
 from progress.bar import Bar
 
 def frame_by_frame_process(input_video, output_video, frame_callback, multi_threaded=False, debug=False):
@@ -40,6 +41,17 @@ def frame_by_frame_process(input_video, output_video, frame_callback, multi_thre
       writer.write(frame_callback(frame))
       ret, frame = cap.read()
   cap.release()
+  writer.release()
+
+
+def write_frames_to_video(frames: np.array, output_video: str, fps: int=60):
+  """Write image frames to a video file."""
+  height, width, channels = frames[0].shape
+  fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")
+  writer = cv2.VideoWriter(output_video, fourcc, fps, (int(width), int(height)))
+
+  for frame in frames:
+    writer.write(frame)
   writer.release()
 
 if __name__ == "__main__":
