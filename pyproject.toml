@@ -8,7 +8,11 @@ version = "0.0.1"
 
 [tool.setuptools]
 packages = ["vis.lib"]
-script-files = ["vis/bin/vis.video_filter", "vis/bin/vis.image_filter"]
+script-files = [
+  "vis/bin/vis.audio_filter",
+  "vis/bin/vis.image_filter",
+  "vis/bin/vis.video_filter"
+]
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]

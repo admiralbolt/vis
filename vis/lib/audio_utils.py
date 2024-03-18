@@ -86,9 +86,9 @@ class AudioAnalyzer:
     """Get the loudness at a given timestamp."""
     return 20 * math.log(self.loudness[0, self._get_frame(current_seconds=current_seconds)], 10)
   
-  def plot(self):
+  def plot(self, y_axis: str="log"):
     librosa.display.specshow(self.spectrogram, hop_length=self.fft_window / 4,
-                             y_axis="log", x_axis="s", n_fft=self.fft_window,
+                             y_axis=y_axis, x_axis="s", n_fft=self.fft_window,
                              sr=self.sample_rate)
     plt.title(self.file_name)
     plt.colorbar(format='%+2.0f dB')
