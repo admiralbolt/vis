@@ -97,7 +97,6 @@ class MoonAnimation:
   direction: int = 3
 
   def __init__(self, audio_file: str):
-    self.frames = []
     self.stars = []
     self.aa = AudioAnalyzer(file_name=audio_file)
     self.aa.process_features()

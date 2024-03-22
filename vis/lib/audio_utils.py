@@ -3,7 +3,6 @@ import librosa
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy.stats
 
 class AudioAnalyzer:
   """Analyze some audio!"""
@@ -49,7 +48,7 @@ class AudioAnalyzer:
     self.number_of_slices = len(self.spectrogram[0])
     self.frequencies = librosa.fft_frequencies(sr=self.sample_rate, n_fft=self.fft_window)
     self.a_weights = librosa.A_weighting(frequencies=self.frequencies)
-    self.loudness = librosa.feature.rms(y=self.time_series)
+    self.loudness = librosa.feature.rms(y=self.time_series)[0]
     self.tempo, self.beat_frames = librosa.beat.beat_track(y=self.time_series, sr=self.sample_rate)
     self.beat_times = librosa.frames_to_time(self.beat_frames)
   
@@ -84,7 +83,7 @@ class AudioAnalyzer:
   
   def get_loudness(self, current_seconds: float) -> float:
     """Get the loudness at a given timestamp."""
-    return 20 * math.log(self.loudness[0, self._get_frame(current_seconds=current_seconds)], 10)
+    return 20 * math.log(self.loudness[self._get_frame(current_seconds=current_seconds)], 10)
   
   def plot(self, y_axis: str="log"):
     librosa.display.specshow(self.spectrogram, hop_length=self.fft_window / 4,
