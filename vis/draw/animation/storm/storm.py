@@ -102,13 +102,15 @@ class Storm(RenderableAnimation):
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Rain animation!")
   parser.add_argument("--audio_file", help="Audio file to analyze.", required=True)
+  parser.add_argument("--height", default=1080, type=int, help="Height of the video.")
+  parser.add_argument("--width", default=1920, type=int, help="Width of the video.")
   parser.add_argument("--output_video", help="The output video to render.")
   parser.add_argument("--save_animation", default=False, action="store_true")
   args = parser.parse_args()
 
   pygame.init()
 
-  storm = Storm(audio_file=args.audio_file)
+  storm = Storm(audio_file=args.audio_file, height=args.height, width=args.width)
   if args.save_animation:
     storm.save_animation(output_video=args.output_video)
     exit()
