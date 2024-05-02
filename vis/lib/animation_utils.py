@@ -19,6 +19,7 @@ class RenderableAnimation(ABC):
   width: int
   height: int
   dt: float
+  current_frame: int
 
   def __init__(self, audio_file: str, height: int=1080, width: int=1920):
     self.aa = AudioAnalyzer(audio_file)
@@ -27,6 +28,7 @@ class RenderableAnimation(ABC):
     self.width = width
     self.height = height
     self.dt = 0
+    self.current_frame = 0
 
   @abstractmethod
   def render_frame(self, current_seconds: float):
@@ -51,6 +53,7 @@ class RenderableAnimation(ABC):
       current_seconds = pygame.mixer_music.get_pos() / 1000.0
       self.render_frame(current_seconds=current_seconds)
       self.dt = clock.tick(60) / 1000.0
+      self.current_frame += 1
 
   def save_animation(self, output_video: str):
     """Save the animation to a file!"""
@@ -63,6 +66,7 @@ class RenderableAnimation(ABC):
       for current_seconds in np.arange(0, self.aa.duration_seconds, (1.0 / 60)):
         self.render_frame(current_seconds=current_seconds)
         writer.write(cv2.cvtColor(pygame.surfarray.pixels3d(self.screen.copy()).swapaxes(0, 1), cv2.COLOR_RGB2BGR))
+        self.current_frame += 1
         bar.next()
 
     writer.release()
