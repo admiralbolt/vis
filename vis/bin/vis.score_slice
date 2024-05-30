@@ -1,0 +1,16 @@
+#!/Users/admiralbolt/miniconda3/envs/yuh/bin/python
+
+import argparse
+import cv2
+
+from vis.lib import score_utils
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description="Slice a score into segments.")
+  parser.add_argument("--score", help="The score directory!", required=True)
+  parser.add_argument("--gen", help="Generate options vai gui.", default=False, action="store_true")
+  parser.add_argument("--debug", help="Debug that shit.", default=False, action="store_true")
+  args = parser.parse_args()
+
+  score = score_utils.ScoreParser(score_dir=args.score, gen_options=args.gen, debug=args.debug)
+  score.slice()

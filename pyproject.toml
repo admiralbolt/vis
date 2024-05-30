@@ -7,10 +7,14 @@ requires-python = ">=3.8"
 version = "0.0.1"
 
 [tool.setuptools]
-packages = ["vis.lib"]
+packages = [
+  "vis.lib",
+  "vis.lib.score_callbacks",
+]
 script-files = [
   "vis/bin/vis.audio_filter",
   "vis/bin/vis.image_filter",
+  "vis/bin/vis.score_slice",
   "vis/bin/vis.video_filter"
 ]
 
