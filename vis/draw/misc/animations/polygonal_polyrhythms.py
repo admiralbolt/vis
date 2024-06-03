@@ -110,9 +110,17 @@ if __name__ == "__main__":
 
   # animate([triangle, square, hexagon, septagon, thirteen_gon], speed_factor=120)
 
-  triangle = Polygon(radius=400, sides=3, color=(180, 80, 0), sound_file=get_sound_file(0))
-  square = Polygon(radius=400, sides=4, color=(0, 80, 250), sound_file=get_sound_file(24))
-  pentagon = Polygon(radius=400, sides=5, color=(100, 200, 200), sound_file=get_sound_file(16))
-  hexagon = Polygon(radius=400, sides=6, color=(200, 200, 100), sound_file=get_sound_file(15))
+  # triangle = Polygon(radius=400, sides=3, color=(180, 80, 0), sound_file=get_sound_file(0))
+  # square = Polygon(radius=400, sides=4, color=(0, 80, 250), sound_file=get_sound_file(24))
+  # pentagon = Polygon(radius=400, sides=5, color=(100, 200, 200), sound_file=get_sound_file(16))
+  # hexagon = Polygon(radius=400, sides=6, color=(200, 200, 100), sound_file=get_sound_file(15))
 
-  animate([triangle, square, pentagon, hexagon], speed_factor=140)
+  # animate([triangle, square, pentagon, hexagon], speed_factor=140)
+
+  triangle = Polygon(radius=400, sides=3, color=(180, 80, 0), sound_file=get_sound_file(0))
+  square = Polygon(radius=400, sides=4, color=(0, 80, 250), sound_file=get_sound_file(7))
+  hexagon = Polygon(radius=400, sides=6, color=(240, 240, 0), sound_file=get_sound_file(14))
+  septagon = Polygon(radius=400, sides=7, color=(0, 240, 120), sound_file=get_sound_file(16))
+  octagon = Polygon(radius=400, sides=8, color=(0, 255, 255), sound_file=get_sound_file(17))
+  
+  animate([triangle, square, hexagon, septagon, octagon], speed_factor=140)
